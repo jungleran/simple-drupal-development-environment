@@ -1,0 +1,10 @@
+/volumes/*
+
+!/volumes/mysql
+/volumes/mysql/*
+!/volumes/mysql/conf
+
+!/volumes/drupal
+/volumes/drupal/*
+!/volumes/drupal/php.ini
+

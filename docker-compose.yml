@@ -1,0 +1,42 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    container_name: db
+    hostname: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=drupal
+    volumes:
+      - ./volumes/mysql/conf:/etc/mysql/conf.d
+      - ./volumes/mysql/mysql:/var/lib/mysql
+      - ./volumes/mysql/mysqldump:/mysqldump
+
+  drupal:
+    image: drupal:7.56
+    container_name: drupal
+    volumes:
+      - ./volumes/drupal/src:/var/www/html
+      - ./volumes/drupal/php.ini:/usr/local/etc/php/php.ini
+      - ./volumes/drupal/private:/private
+    ports:
+      - 80:80
+
+  drush:
+    image: drush/drush
+    container_name: drush
+    volumes_from:
+      - drupal
+    working_dir: /var/www/html
+    entrypoint:
+      - bash
+    tty: true
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    hostname: pma
+    environment:
+      - PMA_HOST=db
+    ports:
+      - 81:80
